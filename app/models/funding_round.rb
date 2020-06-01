@@ -10,6 +10,8 @@ class FundingRound
         @venture_capitalist = venture_capitalist
         @type = type
         @investment = investment
+
+        @@all << self
     end
 
     def self.all

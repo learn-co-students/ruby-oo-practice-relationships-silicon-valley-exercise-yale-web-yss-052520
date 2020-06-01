@@ -19,4 +19,37 @@ class VentureCapitalist
     @@all
   end
 
+  def offer_contract(startup, inv_type, amount)
+    FundingRound.new(startup, self, inv_type, amount)
+  end
+
+  def funding_rounds
+    FundingRound.all.select { |funding_rnd| funding_rnd.venture_capitalist == self }
+  end
+
+  def portfolio
+    self.funding_rounds.map { |funding_rnd| funding_rnd.startup }.uniq
+  end
+
+  def biggest_investment
+    max_inv = 0
+    output = nil
+    self.funding_rounds.each { |funding_rnd|
+      investment = funding_rnd.investment
+      if investment > max_inv
+        max_inv = investment
+        output = funding_rnd
+      end
+    }
+    output
+  end
+
+  def invested(domain)
+    total_inv_amt = 0
+    self.funding_rounds.each { |funding_rnd|
+      total_inv_amt += funding_rnd.investment if funding_rnd.startup.domain == domain
+    }
+    total_inv_amt
+  end
+
 end
